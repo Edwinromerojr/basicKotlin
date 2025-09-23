@@ -1,6 +1,7 @@
 package com.edwin.myapplication2
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,15 +17,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +45,8 @@ import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,14 +70,7 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(24.dp)
                 ) {
-                    ExpandableCard(
-                        title = "HEHE",
-                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam" +
-                                "ultricies augue nec convallis iaculis. Integer et facilisis justo," +
-                                "et iaculis sapien. Pellentesque ac semper ante, nec elementum mi." +
-                                "Duis imperdiet massa eu ligula ultrices, sed sagittis lacus luctus." +
-                                "Pellentesque scelerisque nulla sed nunc egestas consectetur."
-                    )
+                    TextFieldText()
                 }
             }
         }
@@ -101,8 +107,7 @@ fun SampleText1() {
             append("B")
             append("C")
             append("D")
-        },
-        modifier = Modifier.width(200.dp)
+        }, modifier = Modifier.width(200.dp)
     )
 }
 
@@ -126,13 +131,13 @@ fun SuperScriptText(
     superText: String,
     superTextFontSize: TextUnit = MaterialTheme.typography.labelSmall.fontSize,
     superTextFontWeight: FontWeight = FontWeight.Normal
-){
+) {
     Text(buildAnnotatedString {
         withStyle(
             style = SpanStyle(
                 fontSize = normalFontSize
             )
-        ){
+        ) {
             append(normalText)
         }
         withStyle(
@@ -141,10 +146,56 @@ fun SuperScriptText(
                 fontWeight = superTextFontWeight,
                 baselineShift = BaselineShift.Superscript
             )
-        ){
+        ) {
             append(superText)
         }
     })
+}
+
+@Composable
+fun TextFieldText() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        var text by remember { mutableStateOf("Type here...") }
+        OutlinedTextField(
+            value = text, onValueChange = { newText ->
+                text = newText
+            },
+            label = {
+                Text(text = "Title")
+            },
+            leadingIcon = {
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = "Email Icon"
+                    )
+                }
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    Log.d("Trailing Icon","Clicked")
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Email Icon"
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    Log.d("ImeAction", "Clicked2")
+                }
+            )
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -159,14 +210,7 @@ fun GreetingPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            ExpandableCard(
-                title = "HEHE",
-                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam" +
-                        "ultricies augue nec convallis iaculis. Integer et facilisis justo," +
-                        "et iaculis sapien. Pellentesque ac semper ante, nec elementum mi." +
-                        "Duis imperdiet massa eu ligula ultrices, sed sagittis lacus luctus." +
-                        "Pellentesque scelerisque nulla sed nunc egestas consectetur."
-            )
+            TextFieldText()
         }
     }
 }
