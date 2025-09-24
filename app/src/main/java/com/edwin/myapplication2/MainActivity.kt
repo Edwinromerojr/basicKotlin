@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +41,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
@@ -55,6 +59,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
 import com.edwin.myapplication2.ui.theme.MyApplication2Theme
 import com.edwin.myapplication2.ExpandableCard
 import com.edwin.myapplication2.GoogleButton
@@ -68,16 +77,11 @@ class MainActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(24.dp)
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    GoogleButton(
-                        text = "Sign Up with Google",
-                        loadingText = "Creating Account...",
-                        onClicked = {
-                            Log.d("googleButton", "Clicked")
-                        }
-                    )
+                    CoilImage()
                 }
             }
         }
@@ -205,6 +209,39 @@ fun TextFieldText() {
     }
 }
 
+@Composable
+fun CoilImage(){
+    Box(
+        modifier = Modifier
+            .height(150.dp)
+            .width(150.dp)
+            .background(color = Color.Gray),
+        contentAlignment = Alignment.Center,
+    ){
+        val painter = rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://avatars.githubusercontent.com/u/14994036?v=4")
+                .placeholder(R.drawable.ic_google_logo)
+                .error(R.drawable.ic_launcher_background)
+                .crossfade(true)
+                .transformations(
+                    CircleCropTransformation()
+                )
+                .build()
+        )
+        val painterState = painter.state
+        Image(
+            painter = painter,
+            contentDescription = "Logo",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        if(painterState is AsyncImagePainter.State.Loading){
+            CircularProgressIndicator()
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -217,13 +254,7 @@ fun GreetingPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            GoogleButton(
-                text = "Sign Up with Google",
-                loadingText = "Creating Account...",
-                onClicked = {
-                    Log.d("googleButton", "Clicked")
-                }
-            )
+            CoilImage()
         }
     }
 }
