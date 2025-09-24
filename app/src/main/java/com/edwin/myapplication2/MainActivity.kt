@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edwin.myapplication2.ui.theme.MyApplication2Theme
 import com.edwin.myapplication2.ExpandableCard
+import com.edwin.myapplication2.GoogleButton
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +71,13 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(24.dp)
                 ) {
-                    TextFieldText()
+                    GoogleButton(
+                        text = "Sign Up with Google",
+                        loadingText = "Creating Account...",
+                        onClicked = {
+                            Log.d("googleButton", "Clicked")
+                        }
+                    )
                 }
             }
         }
@@ -210,7 +217,13 @@ fun GreetingPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextFieldText()
+            GoogleButton(
+                text = "Sign Up with Google",
+                loadingText = "Creating Account...",
+                onClicked = {
+                    Log.d("googleButton", "Clicked")
+                }
+            )
         }
     }
 }
