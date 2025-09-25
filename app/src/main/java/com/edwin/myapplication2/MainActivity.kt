@@ -38,6 +38,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,6 +52,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CoilImage()
+                    PasswordText()
                 }
             }
         }
@@ -242,6 +245,46 @@ fun CoilImage(){
     }
 }
 
+@Composable
+fun PasswordText(){
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        var password by rememberSaveable { mutableStateOf("") }
+        var passwordVisibility by remember { mutableStateOf(false) }
+        val icon = if(passwordVisibility)
+            painterResource(id = R.drawable.ic_launcher_foreground)
+        else
+            painterResource(id = R.drawable.ic_google_logo)
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+            },
+            placeholder = { Text(text = "Password")},
+            label = { Text(text = "Password")},
+            trailingIcon = {
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility
+                }) {
+                    Icon(
+                        painter = icon,
+                        contentDescription = "Visibility Icon"
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType =KeyboardType.Password
+            ),
+            visualTransformation = if(passwordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation()
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -254,7 +297,7 @@ fun GreetingPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CoilImage()
+            PasswordText()
         }
     }
 }
