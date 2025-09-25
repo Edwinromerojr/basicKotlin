@@ -59,4 +59,5 @@ dependencies {
 
     //noinspection UseTomlInstead
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("androidx.compose.foundation:foundation:1.9.2")
 }

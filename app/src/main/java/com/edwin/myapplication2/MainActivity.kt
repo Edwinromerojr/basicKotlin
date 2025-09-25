@@ -10,14 +10,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -70,6 +74,8 @@ import coil.transform.RoundedCornersTransformation
 import com.edwin.myapplication2.ui.theme.MyApplication2Theme
 import com.edwin.myapplication2.ExpandableCard
 import com.edwin.myapplication2.GoogleButton
+import com.edwin.myapplication2.repository.PersonRepository
+import androidx.compose.foundation.ExperimentalFoundationApi
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,15 +83,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplication2Theme {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    PasswordText()
-                }
+                Person()
             }
         }
     }
@@ -285,6 +283,53 @@ fun PasswordText(){
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Person(){
+//    val personRepository = PersonRepository()
+//    val getAllData = personRepository.getAllData()
+//
+//    LazyColumn(
+//        contentPadding = PaddingValues(12.dp),
+//        verticalArrangement = Arrangement.spacedBy(12.dp)
+//        ) {
+//        itemsIndexed(
+//            items = getAllData,
+//            key = { index, person ->
+//                person.id
+//            }
+//        ){ index, person ->
+//            Log.d("MainActivity1", index.toString())
+//            CustomItem(person = person)
+//        }
+//    }
+
+    val sections = listOf("A", "B", "C", "D", "E", "F", "G")
+
+    LazyColumn(
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+        sections.forEach { section ->
+            stickyHeader {
+                Text(
+                    text = "Section $section",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.LightGray)
+                        .padding(12.dp)
+                )
+            }
+            items(10){
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = "Item $it from the section $section"
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -297,7 +342,7 @@ fun GreetingPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            PasswordText()
+            Person()
         }
     }
 }
